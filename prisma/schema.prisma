@@ -1,0 +1,805 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// EMBRASTIC BUSINESS OS
+// PostgreSQL schema based on current embrastic.xlsx
+// Existing public.app_state is intentionally NOT managed here.
+// ============================================================
+
+model Customer {
+  id                     String    @id
+  customerCode           String?   @unique
+  name                   String?
+  businessName           String?
+  customerType           String?
+  status                 String?
+  phone                  String?
+  alternatePhone         String?
+  email                  String?
+  contactPerson          String?
+  designation            String?
+  billingAddress         String?
+  billingCity            String?
+  billingState           String?
+  billingPostalCode      String?
+  billingCountry         String?
+  shippingSameAsBilling  String?
+  shippingAddress        String?
+  shippingCity           String?
+  shippingState          String?
+  shippingPostalCode     String?
+  shippingCountry        String?
+  gstNumber              String?
+  panNumber              String?
+  preferredContactMethod String?
+  creditLimit            Decimal?  @db.Decimal(14, 2)
+  paymentTermsDays       Int?
+  priceCategory          String?
+  tags                   String?
+  notes                  String?
+  createdAt              DateTime?
+  updatedAt              DateTime?
+
+  @@index([email])
+  @@index([phone])
+  @@index([status])
+  @@map("customers")
+}
+
+model Digitizing {
+  id               String    @id
+  digitizingNumber String?   @unique
+  artworkId        String?
+  artworkNumber    String?
+  orderId          String?
+  orderNumber      String?
+  customerId       String?
+  customerName     String?
+  designName       String?
+  digitizingDate   DateTime? @db.Date
+  digitizerName    String?
+  stitchCount      Int?
+  width            Decimal?  @db.Decimal(12, 2)
+  height           Decimal?  @db.Decimal(12, 2)
+  machineFormat    String?
+  embroideryType   String?
+  needleCount      Int?
+  colorCount       Int?
+  density          Decimal?  @db.Decimal(12, 4)
+  underlayType     String?
+  pullCompensation Decimal?  @db.Decimal(12, 4)
+  fileName         String?
+  digitizedFileUrl String?
+  status           String?
+  notes            String?
+  createdAt        DateTime?
+  updatedAt        DateTime?
+
+  @@index([orderId])
+  @@index([customerId])
+  @@index([artworkId])
+  @@index([status])
+  @@map("digitizing")
+}
+
+model Order {
+  id               String    @id
+  orderNumber      String?   @unique
+  quotationId      String?
+  quotationNumber  String?
+  customerId       String?
+  customerName     String?
+  customerPoNumber String?
+  orderDate        DateTime? @db.Date
+  deliveryDate     DateTime? @db.Date
+  priority         String?
+  orderSource      String?
+  contactPerson    String?
+  contactPhone     String?
+  contactEmail     String?
+  shippingAddress  String?
+  paymentTermsDays Int?
+  status           String?
+
+  // Preserved from Excel as JSON during phase 1 migration.
+  items      Json?
+  orderItems Json?
+
+  totalQuantity Int?
+  subtotal      Decimal?  @db.Decimal(14, 2)
+  gstAmount     Decimal?  @db.Decimal(14, 2)
+  totalAmount   Decimal?  @db.Decimal(14, 2)
+  notes         String?
+  createdAt     DateTime?
+  updatedAt     DateTime?
+
+  @@index([customerId])
+  @@index([orderDate])
+  @@index([deliveryDate])
+  @@index([status])
+  @@map("orders")
+}
+
+model Payment {
+  id             String    @id
+  invoiceId      String?
+  invoiceNumber  String?
+  customer       String?
+  customerId     String?
+  orderId        String?
+  orderNumber    String?
+  dispatchId     String?
+  dispatchNumber String?
+  date           DateTime? @db.Date
+  amount         Decimal?  @db.Decimal(14, 2)
+  method         String?
+  reference      String?
+  notes          String?
+  createdAt      DateTime?
+
+  @@index([invoiceId])
+  @@index([customerId])
+  @@index([orderId])
+  @@index([dispatchId])
+  @@index([date])
+  @@map("payments")
+}
+
+model Quotation {
+  id              String    @id
+  quotationNumber String?   @unique
+  customerId      String?
+  customerName    String?
+  date            DateTime? @db.Date
+  validUntil      DateTime? @db.Date
+  items           Json?
+  discount        Decimal?  @db.Decimal(14, 2)
+  gstPercent      Decimal?  @db.Decimal(7, 2)
+  notes           String?
+  status          String?
+  createdAt       DateTime?
+
+  @@index([customerId])
+  @@index([date])
+  @@index([status])
+  @@map("quotations")
+}
+
+model Artwork {
+  id           String    @id
+  orderId      String?
+  orderNumber  String?
+  customerId   String?
+  customerName String?
+  designName   String?
+  fileName     String?
+  status       String?
+  notes        String?
+  createdAt    DateTime?
+
+  @@index([orderId])
+  @@index([customerId])
+  @@index([status])
+  @@map("artwork")
+}
+
+model Production {
+  id                     String    @id
+  workOrderId            String?
+  workOrderNumber        String?
+  orderId                String?
+  orderNumber            String?
+  orderItemId            String?
+  customerId             String?
+  customerName           String?
+  digitizingId           String?
+  designName             String?
+  itemDescription        String?
+  garmentColor           String?
+  garmentSize            String?
+  status                 String?
+  machineName            String?
+  operatorName           String?
+  productionQuantity     Int?
+  completedQuantity      Int?
+  stitchCount            Int?
+  embroideryWidthMm      Decimal?  @db.Decimal(12, 2)
+  embroideryHeightMm     Decimal?  @db.Decimal(12, 2)
+  hoopSize               String?
+  colourCount            Int?
+  threadColors           String?
+  threadType             String?
+  needleType             String?
+  backingType            String?
+  toppingRequired        String?
+  machineSpeed           Int?
+  placement              String?
+  sampleApproved         String?
+  sampleApprovedBy       String?
+  startDate              DateTime? @db.Date
+  startTime              String?
+  completedDate          DateTime? @db.Date
+  completedTime          String?
+  rejectedQuantity       Int?
+  reworkQuantity         Int?
+  downtimeMinutes        Int?
+  stoppageReason         String?
+  productionInstructions String?
+  packingInstructions    String?
+  notes                  String?
+  createdAt              DateTime?
+  updatedAt              DateTime?
+
+  @@index([workOrderId])
+  @@index([orderId])
+  @@index([customerId])
+  @@index([digitizingId])
+  @@index([status])
+  @@map("production")
+}
+
+model QualityControl {
+  id                          String    @id
+  qcNumber                    String?   @unique
+  productionId                String?
+  productionNumber            String?
+  workOrderId                 String?
+  workOrderNumber             String?
+  orderId                     String?
+  orderNumber                 String?
+  orderItemId                 String?
+  customerId                  String?
+  customerName                String?
+  digitizingId                String?
+  designName                  String?
+  itemDescription             String?
+  garmentColor                String?
+  garmentSize                 String?
+  machineName                 String?
+  operatorName                String?
+  productionQuantity          Int?
+  productionCompletedQuantity Int?
+  productionRejectedQuantity  Int?
+  productionReworkQuantity    Int?
+  inspectedQuantity           Int?
+  passedQuantity              Int?
+  rejectedQuantity            Int?
+  reworkQuantity              Int?
+  qcStatus                    String?
+  stitchQuality               String?
+  threadQuality               String?
+  placementAccuracy           String?
+  sizeAccuracy                String?
+  colorAccuracy               String?
+  finishingQuality            String?
+  cleanliness                 String?
+  packagingReadiness          String?
+  defectType                  String?
+  defectDetails               String?
+  correctiveAction            String?
+  inspectionDate              DateTime? @db.Date
+  inspectorName               String?
+  dispatchReady               String?
+  notes                       String?
+  createdAt                   DateTime?
+  updatedAt                   DateTime?
+
+  @@index([productionId])
+  @@index([workOrderId])
+  @@index([orderId])
+  @@index([customerId])
+  @@index([qcStatus])
+  @@map("quality_control")
+}
+
+model Inventory {
+  id           String    @id
+  name         String?
+  category     String?
+  sku          String?
+  brand        String?
+  color        String?
+  colour       String?
+  colorCode    String?
+  colourCode   String?
+  size         String?
+  variant      String?
+  quantity     Decimal?  @db.Decimal(14, 3)
+  unit         String?
+  minimumStock Decimal?  @db.Decimal(14, 3)
+  price        Decimal?  @db.Decimal(14, 2)
+  supplier     String?
+  notes        String?
+  createdAt    DateTime?
+  updatedAt    DateTime?
+
+  @@index([sku])
+  @@index([category])
+  @@map("inventory")
+}
+
+model Expense {
+  id                     String    @id
+  date                   DateTime? @db.Date
+  category               String?
+  description            String?
+  amount                 Decimal?  @db.Decimal(14, 2)
+  paymentMethod          String?
+  reference              String?
+  supplier               String?
+  inventoryTransactionId String?
+  inventoryId            String?
+  sku                    String?
+  itemName               String?
+  quantity               Decimal?  @db.Decimal(14, 3)
+  unit                   String?
+  unitCost               Decimal?  @db.Decimal(14, 2)
+  supplierId             String?
+  supplierCode           String?
+  supplierBillId         String?
+  supplierBillNumber     String?
+  supplierInvoiceNumber  String?
+  purchaseOrderId        String?
+  purchaseOrderNumber    String?
+  notes                  String?
+  createdAt              DateTime?
+
+  @@index([date])
+  @@index([inventoryId])
+  @@index([supplierId])
+  @@index([supplierBillId])
+  @@index([purchaseOrderId])
+  @@map("expenses")
+}
+
+model Setting {
+  id        String    @id
+  key       String?   @unique
+  value     String?
+  updatedAt DateTime?
+
+  @@map("settings")
+}
+
+model Invoice {
+  id                String    @id
+  invoiceNumber     String?   @unique
+  customer          String?
+  customerId        String?
+  orderNumber       String?
+  orderId           String?
+  dispatchId        String?
+  dispatchNumber    String?
+  workOrderId       String?
+  workOrderNumber   String?
+  productionId      String?
+  productionNumber  String?
+  qualityControlId  String?
+  qcNumber          String?
+  dispatchStatus    String?
+  dispatchDate      DateTime? @db.Date
+  courierName       String?
+  trackingNumber    String?
+  invoiceDate       DateTime? @db.Date
+  dueDate           DateTime? @db.Date
+  items             Json?
+  discount          Decimal?  @db.Decimal(14, 2)
+  gstPercent        Decimal?  @db.Decimal(7, 2)
+  subtotal          Decimal?  @db.Decimal(14, 2)
+  taxableAmount     Decimal?  @db.Decimal(14, 2)
+  taxAmount         Decimal?  @db.Decimal(14, 2)
+  totalAmount       Decimal?  @db.Decimal(14, 2)
+  paidAmount        Decimal?  @db.Decimal(14, 2)
+  outstandingAmount Decimal?  @db.Decimal(14, 2)
+  notes             String?
+  status            String?
+  createdAt         DateTime?
+  updatedAt         DateTime?
+
+  @@index([customerId])
+  @@index([orderId])
+  @@index([dispatchId])
+  @@index([invoiceDate])
+  @@index([status])
+  @@map("invoices")
+}
+
+model InventoryTransaction {
+  id               String    @id
+  inventoryId      String?
+  sku              String?
+  itemName         String?
+  type             String?
+  quantity         Decimal?  @db.Decimal(14, 3)
+  previousQuantity Decimal?  @db.Decimal(14, 3)
+  newQuantity      Decimal?  @db.Decimal(14, 3)
+  supplier         String?
+  purchaseNumber   String?
+  unitCost         Decimal?  @db.Decimal(14, 2)
+  purchaseAmount   Decimal?  @db.Decimal(14, 2)
+  referenceType    String?
+  referenceId      String?
+  notes            String?
+  createdAt        DateTime?
+
+  @@index([inventoryId])
+  @@index([sku])
+  @@index([referenceId])
+  @@index([createdAt])
+  @@map("inventory_transactions")
+}
+
+model Dispatch {
+  id                   String    @id
+  dispatchNumber       String?   @unique
+  orderId              String?
+  orderNumber          String?
+  orderItemId          String?
+  customerId           String?
+  customerName         String?
+  qualityControlId     String?
+  qcNumber             String?
+  qcResult             String?
+  qcDate               DateTime? @db.Date
+  qcInspector          String?
+  productionId         String?
+  productionNumber     String?
+  workOrderId          String?
+  workOrderNumber      String?
+  designName           String?
+  itemDescription      String?
+  garmentColor         String?
+  garmentSize          String?
+  qcPassedQuantity     Int?
+  dispatchQuantity     Int?
+  dispatchDate         DateTime? @db.Date
+  courierName          String?
+  trackingNumber       String?
+  shippingMode         String?
+  dispatchMethod       String?
+  packageCount         Int?
+  totalWeight          Decimal?  @db.Decimal(14, 3)
+  vehicleNumber        String?
+  driverName           String?
+  driverPhone          String?
+  deliveryAddress      String?
+  packingInstructions  String?
+  expectedDeliveryDate DateTime? @db.Date
+  actualDeliveryDate   DateTime? @db.Date
+  status               String?
+  notes                String?
+  createdAt            DateTime?
+  updatedAt            DateTime?
+
+  @@index([orderId])
+  @@index([customerId])
+  @@index([qualityControlId])
+  @@index([productionId])
+  @@index([workOrderId])
+  @@index([status])
+  @@map("dispatch")
+}
+
+model WorkOrder {
+  id                     String    @id
+  workOrderNumber        String?   @unique
+  orderId                String?
+  orderNumber            String?
+  orderItemId            String?
+  customerId             String?
+  customerName           String?
+  customerPoNumber       String?
+  digitizingId           String?
+  digitizingNumber       String?
+  itemType               String?
+  itemDescription        String?
+  designName             String?
+  embroideryService      String?
+  placement              String?
+  garmentColor           String?
+  garmentSize            String?
+  orderedQuantity        Int?
+  productionQuantity     Int?
+  unit                   String?
+  stitchCount            Int?
+  embroideryWidthMm      Decimal?  @db.Decimal(12, 2)
+  embroideryHeightMm     Decimal?  @db.Decimal(12, 2)
+  colourCount            Int?
+  threadColors           String?
+  fileFormat             String?
+  machineName            String?
+  operatorName           String?
+  hoopSize               String?
+  threadType             String?
+  needleType             String?
+  backingType            String?
+  toppingRequired        String?
+  machineSpeed           Int?
+  sampleRequired         String?
+  sampleApproved         String?
+  sampleApprovedBy       String?
+  plannedStartDate       DateTime? @db.Date
+  targetCompletionDate   DateTime? @db.Date
+  priority               String?
+  status                 String?
+  packingInstructions    String?
+  productionInstructions String?
+  notes                  String?
+  createdAt              DateTime?
+  updatedAt              DateTime?
+
+  @@index([orderId])
+  @@index([customerId])
+  @@index([digitizingId])
+  @@index([status])
+  @@map("work_orders")
+}
+
+model Supplier {
+  id                String    @id
+  supplierCode      String?   @unique
+  supplierName      String?
+  contactPerson     String?
+  phone             String?
+  alternatePhone    String?
+  email             String?
+  gstin             String?
+  pan               String?
+  address           String?
+  city              String?
+  state             String?
+  postalCode        String?
+  country           String?
+  paymentTermsDays  Int?
+  leadTimeDays      Int?
+  categories        String?
+  bankName          String?
+  bankAccountName   String?
+  bankAccountNumber String?
+  ifscCode          String?
+  upiId             String?
+  notes             String?
+  status            String?
+  createdAt         DateTime?
+  updatedAt         DateTime?
+
+  @@index([email])
+  @@index([status])
+  @@map("suppliers")
+}
+
+model PurchaseOrder {
+  id                   String    @id
+  purchaseOrderNumber  String?   @unique
+  supplierId           String?
+  supplierCode         String?
+  supplierName         String?
+  supplierGstin        String?
+  poDate               DateTime? @db.Date
+  expectedDeliveryDate DateTime? @db.Date
+  paymentTermsDays     Int?
+  reference            String?
+  items                Json?
+  subtotal             Decimal?  @db.Decimal(14, 2)
+  taxAmount            Decimal?  @db.Decimal(14, 2)
+  totalAmount          Decimal?  @db.Decimal(14, 2)
+  receivedQuantity     Decimal?  @db.Decimal(14, 3)
+  pendingQuantity      Decimal?  @db.Decimal(14, 3)
+  status               String?
+  deliveryAddress      String?
+  notes                String?
+  createdAt            DateTime?
+  updatedAt            DateTime?
+
+  @@index([supplierId])
+  @@index([poDate])
+  @@index([status])
+  @@map("purchase_orders")
+}
+
+model ReturnRework {
+  id                  String    @id
+  caseNumber          String?   @unique
+  caseType            String?
+  sourceStage         String?
+  orderId             String?
+  orderNumber         String?
+  orderItemId         String?
+  workOrderId         String?
+  workOrderNumber     String?
+  productionId        String?
+  qualityControlId    String?
+  qcNumber            String?
+  dispatchId          String?
+  dispatchNumber      String?
+  customerId          String?
+  customerName        String?
+  itemDescription     String?
+  garmentColor        String?
+  garmentSize         String?
+  designName          String?
+  reportedDate        DateTime? @db.Date
+  quantity            Int?
+  reasonCategory      String?
+  defectType          String?
+  issueDetails        String?
+  responsibility      String?
+  severity            String?
+  actionRequired      String?
+  reworkQuantity      Int?
+  replacementQuantity Int?
+  scrapQuantity       Int?
+  refundQuantity      Int?
+  estimatedCost       Decimal?  @db.Decimal(14, 2)
+  actualCost          Decimal?  @db.Decimal(14, 2)
+  assignedTo          String?
+  targetDate          DateTime? @db.Date
+  completedDate       DateTime? @db.Date
+  rootCause           String?
+  correctiveAction    String?
+  preventiveAction    String?
+  customerResolution  String?
+  status              String?
+  notes               String?
+  createdAt           DateTime?
+  updatedAt           DateTime?
+
+  @@index([orderId])
+  @@index([workOrderId])
+  @@index([productionId])
+  @@index([qualityControlId])
+  @@index([dispatchId])
+  @@index([customerId])
+  @@index([status])
+  @@map("returns_rework")
+}
+
+model PriceMaster {
+  id                    String    @id
+  sku                   String?
+  itemName              String?
+  itemType              String?
+  category              String?
+  description           String?
+  unit                  String?
+  sellingPrice          Decimal?  @db.Decimal(14, 2)
+  gstPercent            Decimal?  @db.Decimal(7, 2)
+  minimumSellingPrice   Decimal?  @db.Decimal(14, 2)
+  costPrice             Decimal?  @db.Decimal(14, 2)
+  customerPriceCategory String?
+  effectiveFrom         DateTime? @db.Date
+  effectiveTo           DateTime? @db.Date
+  status                String?
+  notes                 String?
+  createdAt             DateTime?
+  updatedAt             DateTime?
+
+  @@index([sku])
+  @@index([category])
+  @@index([status])
+  @@map("price_master")
+}
+
+model SupplierBill {
+  id                    String    @id
+  billNumber            String?   @unique
+  supplierInvoiceNumber String?
+  supplierId            String?
+  supplierCode          String?
+  supplierName          String?
+  purchaseOrderId       String?
+  purchaseOrderNumber   String?
+  billDate              DateTime? @db.Date
+  dueDate               DateTime? @db.Date
+  subtotal              Decimal?  @db.Decimal(14, 2)
+  taxAmount             Decimal?  @db.Decimal(14, 2)
+  totalAmount           Decimal?  @db.Decimal(14, 2)
+  notes                 String?
+  status                String?
+  createdAt             DateTime?
+  updatedAt             DateTime?
+
+  @@index([supplierId])
+  @@index([purchaseOrderId])
+  @@index([billDate])
+  @@index([status])
+  @@map("supplier_bills")
+}
+
+model SupplierPayment {
+  id                    String    @id
+  supplierBillId        String?
+  billNumber            String?
+  supplierInvoiceNumber String?
+  supplierId            String?
+  supplierCode          String?
+  supplierName          String?
+  purchaseOrderId       String?
+  purchaseOrderNumber   String?
+  paymentDate           DateTime? @db.Date
+  amount                Decimal?  @db.Decimal(14, 2)
+  paymentMethod         String?
+  reference             String?
+  notes                 String?
+  createdAt             DateTime?
+
+  @@index([supplierBillId])
+  @@index([supplierId])
+  @@index([purchaseOrderId])
+  @@index([paymentDate])
+  @@map("supplier_payments")
+}
+
+model CustomerAccount {
+  id            String    @id
+  customerId    String?
+  email         String?   @unique
+  passwordHash  String?
+  status        String?
+  emailVerified String?
+  lastLoginAt   DateTime?
+  createdAt     DateTime?
+  updatedAt     DateTime?
+
+  @@index([customerId])
+  @@index([status])
+  @@map("customer_accounts")
+}
+
+model ProductCategory {
+  id           String    @id
+  categoryCode String?   @unique
+  name         String?
+  slug         String?   @unique
+  description  String?
+  imageUrl     String?
+  displayOrder Int?
+  featured     String?
+  status       String?
+  createdAt    DateTime?
+  updatedAt    DateTime?
+
+  @@index([status])
+  @@map("product_categories")
+}
+
+model Product {
+  id                 String    @id
+  productCode        String?   @unique
+  sku                String?
+  name               String?
+  slug               String?   @unique
+  categoryId         String?
+  categoryName       String?
+  productType        String?
+  garmentType        String?
+  shortDescription   String?
+  description        String?
+  primaryImage       String?
+  additionalImages   String?
+  priceMasterId      String?
+  priceMasterSku     String?
+  originalPrice      Decimal?  @db.Decimal(14, 2)
+  badge              String?
+  featured           String?
+  newArrival         String?
+  allowCustomisation String?
+  availableColours   String?
+  availableSizes     String?
+  displayOrder       Int?
+  status             String?
+  createdAt          DateTime?
+  updatedAt          DateTime?
+
+  @@index([sku])
+  @@index([categoryId])
+  @@index([priceMasterId])
+  @@index([status])
+  @@map("products")
+}

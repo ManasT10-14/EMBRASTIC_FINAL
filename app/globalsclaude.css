@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Page sits on a faint cool grey so white cards and tables read as surfaces. */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 9%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 220 20% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 20% 96%;
+    --muted-foreground: 218 12% 40%;
+    --accent: 220 20% 95%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 16% 90%;
+    --input: 220 16% 88%;
+    --ring: 222 47% 11%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.625rem;
+
+    --font-sans: var(--font-embrastic-sans);
+    --font-display: var(--font-embrastic-display);
+  }
+
+  .dark {
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 39% 7%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 39% 7%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 25% 13%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 25% 13%;
+    --muted-foreground: 215 20% 68%;
+    --accent: 217 25% 13%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 22% 17%;
+    --input: 217 22% 17%;
+    --ring: 213 27% 84%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: var(--font-embrastic-sans), ui-sans-serif, system-ui,
+      sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    letter-spacing: -0.006em;
+    line-height: 1.5;
+
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  /* Headings: confident but not heavy, with gentle tightening. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  h1 {
+    font-weight: 700;
+  }
+
+  h2,
+  h3 {
+    font-weight: 650;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  button,
+  [role="button"] {
+    font-weight: 600;
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  strong,
+  b {
+    font-weight: 700;
+  }
+
+  /* Numbers line up in columns: tables, totals, quantities. */
+  table,
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Consistent, visible keyboard focus across the app. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: hsl(220 90% 56% / 0.16);
+  }
+
+  /* Nested scroll regions keep their scroll inside themselves. */
+  .overflow-y-auto,
+  .overflow-auto,
+  .overflow-y-scroll {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * Optional editorial heading for customer-facing hero text.
+   * Use className="font-display" on selected headings only.
+   */
+  .font-display {
+    font-family: var(--font-embrastic-display), Georgia, "Times New Roman",
+      serif;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  .text-premium-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Slim, unobtrusive scrollbar for the dark sidebar. */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.14) transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.14);
+    border-radius: 9999px;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgb(255 255 255 / 0.24);
+  }
+}

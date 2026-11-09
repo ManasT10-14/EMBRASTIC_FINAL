@@ -1,0 +1,20 @@
+EMBRASTIC - RUN ON WINDOWS
+
+1. Open Command Prompt in the project folder.
+2. If node_modules already exists from an old copy, delete it:
+   rmdir /s /q node_modules
+3. Install dependencies:
+   npm install
+4. Start the app:
+   npm run dev
+5. Open:
+   http://localhost:3000
+
+EXCEL BACKEND
+- The Excel database is created automatically at:
+  data\embrastic.xlsx
+- You do NOT need to manually create the workbook.
+- If an old workbook is corrupt, the backend automatically moves it to a
+  timestamped embrastic.corrupt-*.xlsx file and starts with a clean workbook.
+
+If port 3000 is busy, Next.js will show another localhost URL. Open that URL.

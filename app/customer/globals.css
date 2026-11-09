@@ -1,0 +1,172 @@
+/* ===== Global Reset ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== Navigation ===== */
+nav {
+  background: linear-gradient(90deg, #0a1f44, #1a3d7c);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+nav a:hover { color: #f4b400; }
+
+/* ===== Hero Section ===== */
+.hero {
+  background: url('/hero-banner.jpg') center/cover no-repeat;
+  position: relative;
+  color: #fff;
+  text-align: center;
+  padding: 6rem 2rem;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+}
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #f4b400, #ff6f61);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 1;
+}
+.hero p {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  position: relative;
+  z-index: 1;
+}
+.hero button {
+  background: linear-gradient(90deg, #f4b400, #ff6f61);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  margin: 0.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(255,111,97,0.7);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+.hero button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255,111,97,1);
+}
+
+/* ===== Dashboard Cards ===== */
+.card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ===== Status Badges ===== */
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+.status-pending { background: #ff9800; }
+.status-production { background: #2196f3; }
+.status-shipped { background: #4caf50; }
+
+/* ===== Product Grid ===== */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+}
+.product-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+.product-card:hover { transform: scale(1.03); }
+.product-card img { width: 100%; border-radius: 10px; }
+
+/* ===== Checkout Stepper ===== */
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+}
+.step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.step.active {
+  color: #f4b400;
+  font-weight: 700;
+}
+.step::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -50%;
+  width: 100%;
+  height: 4px;
+  background: #ddd;
+  z-index: -1;
+}
+.step.active::after {
+  background: linear-gradient(90deg, #f4b400, #ff6f61);
+}
+
+/* ===== Footer ===== */
+footer {
+  background: #0a1f44;
+  color: #fff;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+footer a { color: #f4b400; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ===== Mobile Adjustments ===== */
+@media (max-width: 768px) {
+  nav { flex-direction: column; align-items: flex-start; }
+  .hero { padding: 3rem 1rem; }
+  .hero h1 { font-size: 2rem; }
+  .products { grid-template-columns: 1fr; padding: 1.5rem; }
+  footer { grid-template-columns: 1fr; text-align: center; }
+}
